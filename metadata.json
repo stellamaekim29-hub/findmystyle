@@ -1,0 +1,6 @@
+{
+  "name": "나만의 추구미 & 패션 스타일링",
+  "description": "중학교 가정과 의복과 패션 생활 수업용 나만의 추구미 찾기 및 패션 스타일링 인터랙티브 웹앱",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

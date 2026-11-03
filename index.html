@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>나만의 추구미 & 패션 스타일링 | 중학교 가정과 수업</title>
+    <meta name="description" content="일러스트로 직접 입혀보는 나만의 추구미 & 패션 스타일링 인터랙티브 룩북" />
+    <meta property="og:title" content="나만의 추구미 & 패션 스타일링" />
+    <meta property="og:description" content="아이콘 대신 실제 옷 일러스트로 캐릭터를 코디하고 나만의 룩북을 완성해 보세요." />
+    <meta property="og:type" content="website" />
+    
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                50: '#eef2ff',
+                100: '#e0e7ff',
+                200: '#c7d2fe',
+                300: '#a5b4fc',
+                400: '#818cf8',
+                500: '#6366f1',
+                600: '#4f46e5',
+                700: '#4338ca',
+                800: '#3730a3',
+                900: '#312e81',
+              }
+            }
+          }
+        }
+      }
+    </script>
+    
+    <!-- Confetti & html2canvas CDNs for Celebration & Card Download -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body class="min-h-screen bg-slate-50 text-slate-800 flex flex-col justify-between">
+    <!-- Top Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
+      <div class="max-w-5xl mx-auto px-4 py-3 sm:py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center text-white text-xl shadow-md">
+            ✨
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100">중1 가정(의복과 생활) 수업</span>
+              <h1 class="text-base sm:text-lg font-bold text-slate-800">나만의 추구미 & 패션 스타일링</h1>
+            </div>
+            <p class="text-xs text-slate-500 hidden sm:block">아이콘이 아닌 패션 일러스트로 직접 코디하는 나만의 시그니처 룩북</p>
+          </div>
+        </div>
+
+        <!-- Student Info Fields & Character Model Selector -->
+        <div class="flex flex-wrap items-center gap-2 bg-slate-50 p-1.5 sm:p-2 rounded-xl border border-slate-200 text-xs">
+          <div class="flex items-center gap-1">
+            <span class="text-slate-400 font-medium">학번:</span>
+            <input type="text" id="student-class" placeholder="1-3반 15번" class="w-24 sm:w-28 px-2 py-1 rounded bg-white border border-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-medium text-slate-700" />
+          </div>
+          <div class="flex items-center gap-1">
+            <span class="text-slate-400 font-medium">이름:</span>
+            <input type="text" id="student-name" placeholder="홍길동" class="w-16 sm:w-20 px-2 py-1 rounded bg-white border border-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-medium text-slate-700" />
+          </div>
+          <div class="flex items-center gap-1 pl-1 border-l border-slate-200">
+            <span class="text-slate-400 font-medium">캐릭터:</span>
+            <div class="inline-flex rounded-lg bg-slate-200/80 p-0.5 gap-0.5" role="group">
+              <button type="button" id="header-gender-boy" class="px-2 py-0.5 rounded text-xs font-bold transition-all flex items-center gap-0.5 cursor-pointer">
+                <span>👦</span> 남
+              </button>
+              <button type="button" id="header-gender-girl" class="px-2 py-0.5 rounded text-xs font-bold transition-all flex items-center gap-0.5 cursor-pointer">
+                <span>👧</span> 여
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step Navigation Indicator -->
+      <div class="max-w-5xl mx-auto px-4 pb-2">
+        <div class="grid grid-cols-3 gap-2 text-center text-xs font-medium">
+          <div id="step-nav-1" class="py-1.5 border-b-2 border-indigo-600 text-indigo-600 font-bold flex items-center justify-center gap-1.5 transition-all">
+            <span class="w-4 h-4 rounded-full bg-indigo-600 text-white text-[10px] flex items-center justify-center">1</span>
+            <span>STEP 1: 추구미 & 시각적 무드 선택</span>
+          </div>
+          <div id="step-nav-2" class="py-1.5 border-b-2 border-transparent text-slate-400 flex items-center justify-center gap-1.5 transition-all">
+            <span class="w-4 h-4 rounded-full bg-slate-200 text-slate-600 text-[10px] flex items-center justify-center">2</span>
+            <span>STEP 2: 일러스트 캐릭터 코디</span>
+          </div>
+          <div id="step-nav-3" class="py-1.5 border-b-2 border-transparent text-slate-400 flex items-center justify-center gap-1.5 transition-all">
+            <span class="w-4 h-4 rounded-full bg-slate-200 text-slate-600 text-[10px] flex items-center justify-center">3</span>
+            <span>RESULT: 완성 룩북 카드</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-5xl mx-auto px-4 py-6 w-full grow">
+
+      <!-- ========================================== -->
+      <!-- STEP 1: 추구미 & 시각적 무드 원픽 선택         -->
+      <!-- ========================================== -->
+      <section id="step-1" class="space-y-6 animate-fade-in">
+        <div class="bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 rounded-2xl p-5 border border-indigo-100 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white text-indigo-700 text-xs font-semibold shadow-xs mb-2">
+              <span>🎨 STEP 1</span> 나의 추구미와 시각적 무드(Visual Vibe) 탐색
+            </div>
+            <h2 class="text-xl sm:text-2xl font-black text-slate-800 tracking-tight">어떤 시각적 분위기와 이미지로 나를 표현하고 싶나요?</h2>
+            <p class="text-sm text-slate-600 mt-1">내가 바라는 삶의 태도와 시각적 감성이 담긴 무드보드 카드를 둘러보고 마음에 드는 원픽을 골라보세요!</p>
+          </div>
+          <div class="bg-white/90 backdrop-blur-xs px-3.5 py-2.5 rounded-xl border border-indigo-200 text-xs text-indigo-900 font-medium flex items-center gap-2 shrink-0">
+            <span>💡</span>
+            <span>선택한 추구미에 맞춰 캐릭터의 일러스트 의복이 추천됩니다.</span>
+          </div>
+        </div>
+
+        <!-- Unified Chugumi & Visual Mood Card Grid (14 Fashion Styles) -->
+        <div id="chugumi-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <!-- Dynamically populated by script.js with 14 styles -->
+        </div>
+
+        <!-- Step 1 Bottom Action Bar -->
+        <div class="sticky bottom-4 z-20 bg-white/95 backdrop-blur-md rounded-2xl p-4 shadow-lg border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div id="step-1-status" class="text-sm font-medium text-slate-500 text-center sm:text-left">
+            마음에 드는 추구미 무드보드 카드를 1개 클릭해 주세요.
+          </div>
+          <button id="btn-to-step-2" disabled class="w-full sm:w-auto px-6 py-3 rounded-xl font-bold text-sm bg-slate-200 text-slate-400 cursor-not-allowed transition-all shadow-xs flex items-center justify-center gap-2">
+            <span>다음 단계: 패션 일러스트로 캐릭터 코디하기</span>
+            <span>➔</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- STEP 2: 의복 및 아이템 일러스트 조합           -->
+      <!-- ========================================== -->
+      <section id="step-2" class="space-y-6 hidden animate-fade-in">
+        <!-- Step 2 Header Banner -->
+        <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <button id="btn-back-to-step-1" class="px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 text-xs font-semibold hover:bg-slate-50 transition-colors flex items-center gap-1">
+              <span>←</span>
+              <span>추구미 다시 고르기</span>
+            </button>
+            <div class="h-4 w-px bg-slate-200"></div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-slate-500">선택한 추구미:</span>
+              <span id="selected-chugumi-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-indigo-100 text-indigo-700 flex items-center gap-1.5">
+                <!-- Dynamically populated -->
+              </span>
+            </div>
+          </div>
+          <div class="text-xs text-slate-500 flex items-center gap-2">
+            <span>아이템을 클릭하면 캐릭터가 실제 옷을 착용한 일러스트로 변합니다!</span>
+          </div>
+        </div>
+
+        <!-- 2-Column Workspace: Left Character Stage, Right Item Selector -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+          <!-- Left: Live Fashion Character Illustration Stage (lg:col-span-5) -->
+          <div class="lg:col-span-5 lg:sticky lg:top-24 space-y-4">
+            <div class="mannequin-container p-5 relative overflow-hidden">
+              <div id="preview-top-gradient" class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
+              
+              <div class="flex items-center justify-between mb-3 border-b border-slate-200 pb-2.5">
+                <div class="flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">실시간 전신 코디 일러스트</span>
+                </div>
+                <span id="preview-user-tag" class="text-xs font-semibold px-2 py-0.5 rounded-full bg-white text-indigo-600 shadow-2xs border border-indigo-100">1학년 홍길동</span>
+              </div>
+
+              <!-- Character Model Switcher (Boy / Girl) -->
+              <div class="flex items-center justify-between mb-3 bg-white/95 p-2 rounded-xl border border-slate-200 shadow-2xs">
+                <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5 pl-1">
+                  <span>👤</span> 캐릭터 모델:
+                </span>
+                <div class="inline-flex rounded-lg bg-slate-100 p-0.5 gap-1" role="group">
+                  <button type="button" id="btn-char-boy" class="char-gender-btn px-3 py-1 rounded-md text-xs font-bold transition-all flex items-center gap-1 cursor-pointer">
+                    <span>👦</span> 남학생
+                  </button>
+                  <button type="button" id="btn-char-girl" class="char-gender-btn px-3 py-1 rounded-md text-xs font-bold transition-all flex items-center gap-1 cursor-pointer">
+                    <span>👧</span> 여학생
+                  </button>
+                </div>
+              </div>
+
+              <!-- Dedicated Full-Body Vector Character Canvas -->
+              <div class="illustration-box p-4 border border-slate-200/80 shadow-xs relative">
+                
+                <!-- Character Aesthetic Mood Tag & Color Palette -->
+                <div class="w-full flex items-center justify-between absolute top-3 left-0 px-4 z-10">
+                  <div id="character-vibe-pill" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-white/90 backdrop-blur-xs text-indigo-700 border border-indigo-100 shadow-2xs">
+                    ☀️ 따스한 햇살 웜톤
+                  </div>
+                  <div id="preview-palette-chips" class="flex items-center gap-1 bg-white/90 backdrop-blur-xs p-1 rounded-full border border-slate-200 shadow-2xs">
+                    <!-- Palette Swatches -->
+                  </div>
+                </div>
+
+                <!-- High-Res Vector Fashion Character Illustration Container -->
+                <div id="character-svg-container" class="w-full flex items-center justify-center pt-8 pb-2">
+                  <!-- Generated by script.js with rich multi-layer SVG -->
+                </div>
+
+                <!-- Live Slot Summary Badges -->
+                <div class="w-full grid grid-cols-3 gap-1.5 mt-2 text-center text-[10px]">
+                  <div id="slot-chip-top" class="p-1.5 rounded-lg bg-white/90 border border-slate-200 shadow-2xs truncate">
+                    <span class="text-slate-400 font-medium block">상의</span>
+                    <span id="slot-chip-top-text" class="font-bold text-slate-700 truncate block">미선택</span>
+                  </div>
+                  <div id="slot-chip-bottom" class="p-1.5 rounded-lg bg-white/90 border border-slate-200 shadow-2xs truncate">
+                    <span class="text-slate-400 font-medium block">하의</span>
+                    <span id="slot-chip-bottom-text" class="font-bold text-slate-700 truncate block">미선택</span>
+                  </div>
+                  <div id="slot-chip-shoes" class="p-1.5 rounded-lg bg-white/90 border border-slate-200 shadow-2xs truncate">
+                    <span class="text-slate-400 font-medium block">신발</span>
+                    <span id="slot-chip-shoes-text" class="font-bold text-slate-700 truncate block">미선택</span>
+                  </div>
+                </div>
+
+                <!-- Chosen Accessories Badges -->
+                <div class="w-full mt-2 pt-2 border-t border-slate-200/80 text-left">
+                  <div class="text-[10px] text-slate-400 font-semibold mb-1">착용한 소품 일러스트:</div>
+                  <div id="slot-acc-list" class="flex flex-wrap gap-1">
+                    <span class="text-[11px] text-slate-400 italic">선택된 소품 없음 (미니멀)</span>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Recommendation tip -->
+              <div id="chugumi-recommend-tip" class="mt-3 p-3 rounded-xl bg-indigo-50/70 border border-indigo-100 text-xs text-indigo-900 text-left leading-relaxed">
+                <!-- Dynamically updated -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Visual Item Selection Categories with SVG Illustrations (lg:col-span-7) -->
+          <div class="lg:col-span-7 space-y-6">
+
+            <!-- Category 1: 상의 및 원피스 (Tops & Dresses) -->
+            <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-md bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs font-bold">1</span>
+                  <h3 class="text-base font-bold text-slate-800">상의 및 원피스 (Top & Dress) 일러스트 선택</h3>
+                  <span class="text-xs text-rose-500 font-medium">* 필수</span>
+                </div>
+                <span id="top-selected-label" class="text-xs font-medium text-slate-400">선택 대기</span>
+              </div>
+              <p class="text-xs text-slate-500">단정한 셔츠, 편안한 후드티, 러블리 세일러 리본 블라우스와 로맨틱 뷔스티에 원피스 세트 중 골라보세요.</p>
+              <div id="category-tops" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <!-- Populated by script.js with SVG thumbnails -->
+              </div>
+            </div>
+
+            <!-- Category 2: 하의 & 치마/원피스 (Bottoms & Skirts) -->
+            <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-md bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs font-bold">2</span>
+                  <h3 class="text-base font-bold text-slate-800">하의 & 치마·멜빵 원피스 (Bottom & Skirt) 일러스트 선택</h3>
+                  <span class="text-xs text-rose-500 font-medium">* 필수</span>
+                </div>
+                <span id="bottom-selected-label" class="text-xs font-medium text-slate-400">선택 대기</span>
+              </div>
+              <p class="text-xs text-slate-500">슬랙스·청바지뿐 아니라 테니스 플리츠스커트, A라인 플레어 스커트, 멜빵 원피스, 캉캉 프릴 치마를 입혀보세요.</p>
+              <div id="category-bottoms" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <!-- Populated by script.js with SVG thumbnails -->
+              </div>
+            </div>
+
+            <!-- Category 3: 신발 (Shoes) -->
+            <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-md bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs font-bold">3</span>
+                  <h3 class="text-base font-bold text-slate-800">신발 (Shoes) 일러스트 선택</h3>
+                  <span class="text-xs text-rose-500 font-medium">* 필수</span>
+                </div>
+                <span id="shoes-selected-label" class="text-xs font-medium text-slate-400">선택 대기</span>
+              </div>
+              <p class="text-xs text-slate-500">깔끔한 스니커즈, 두툼한 어글리 슈즈, 단정한 로퍼 일러스트 중 어울리는 신발을 신겨보세요.</p>
+              <div id="category-shoes" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <!-- Populated by script.js with SVG thumbnails -->
+              </div>
+            </div>
+
+            <!-- Category 4: 소품 및 액세서리 (Accessories - Multi-select) -->
+            <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-md bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs font-bold">4</span>
+                  <h3 class="text-base font-bold text-slate-800">소품 & 가방 일러스트 (Accessories)</h3>
+                  <span class="text-xs text-indigo-500 font-medium">(중복 선택 가능)</span>
+                </div>
+                <span id="acc-count-label" class="text-xs font-medium text-slate-400">0개 선택됨</span>
+              </div>
+              <p class="text-xs text-slate-500">백팩, 인형 키링, 볼캡 모자, 무선 헤드폰, 안경 등으로 캐릭터의 포인트를 완성해 보세요.</p>
+              <div id="category-accessories" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <!-- Populated by script.js with SVG thumbnails -->
+              </div>
+            </div>
+
+            <!-- Category 5: 나의 패션 & 가치관 다짐 한마디 (Student Fashion Statement) -->
+            <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-md bg-purple-100 text-purple-600 flex items-center justify-center text-xs font-bold">✍️</span>
+                  <h3 class="text-base font-bold text-slate-800">나의 패션 & 가치관 한마디 (수업 활동지)</h3>
+                </div>
+                <span class="text-xs text-slate-400">자아정체성 표현 활동</span>
+              </div>
+              <div>
+                <input type="text" id="student-motto" maxlength="45" placeholder="예: 단정함 속에 진지한 열정을 담아 멋진 꿈을 이룰래요!" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium text-slate-800" />
+                <div class="flex flex-wrap items-center gap-1.5 mt-2">
+                  <span class="text-[11px] text-slate-400">추천 문구 클릭:</span>
+                  <button type="button" class="quick-motto-btn text-[11px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">편안함이 곧 나의 가장 큰 자신감!</button>
+                  <button type="button" class="quick-motto-btn text-[11px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">매일매일 성장하는 멋진 갓생러</button>
+                  <button type="button" class="quick-motto-btn text-[11px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">밝은 미소로 친구들에게 따뜻한 힘이 될래요</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Complete Action Button -->
+            <div class="pt-2">
+              <button id="btn-to-result" disabled class="w-full py-4 rounded-xl font-bold text-base bg-slate-200 text-slate-400 cursor-not-allowed shadow-md transition-all flex items-center justify-center gap-2">
+                <span>✨ 나만의 추구미 & 스타일링 룩북 카드 완성하기!</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- STEP 3: RESULT 나만의 룩북 카드 완성           -->
+      <!-- ========================================== -->
+      <section id="step-3" class="space-y-6 hidden animate-fade-in">
+
+        <!-- Top Celebration Header (Hidden when printing) -->
+        <div class="text-center space-y-2 no-print">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">
+            <span>🎉</span> 나만의 룩북 카드 완성!
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-800">축하합니다! 완성된 코디 일러스트 룩북 카드가 탄생했습니다</h2>
+          <p class="text-sm text-slate-600">내가 조합한 전신 패션 일러스트와 추구미가 한눈에 정리된 포트폴리오 카드입니다.</p>
+        </div>
+
+        <!-- The Final Downloadable/Printable ID & Lookbook Card -->
+        <div id="profile-result-card" class="max-w-2xl mx-auto bg-white rounded-3xl p-6 sm:p-8 border-2 border-indigo-200 shadow-2xl relative overflow-hidden transition-all">
+          
+          <!-- Card Decorative Header Band -->
+          <div id="card-header-gradient" class="absolute top-0 left-0 right-0 h-4 bg-gradient-to-r from-amber-400 via-indigo-500 to-pink-500"></div>
+
+          <!-- Card Top Bar: School & Date Meta -->
+          <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-5 pt-2">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🏫</span>
+              <div>
+                <div class="text-[11px] font-bold text-indigo-600 tracking-wider uppercase">2026 중학교 가정과 패션 스타일링 프로젝트</div>
+                <div class="text-sm font-black text-slate-800">MY VIBE & FASHION LOOKBOOK</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div id="card-student-tag" class="text-xs font-bold text-slate-800 px-2.5 py-1 rounded-lg bg-slate-100 inline-block">1학년 학생</div>
+              <div id="card-date-tag" class="text-[10px] text-slate-400 mt-0.5">2026. 11. 03</div>
+            </div>
+          </div>
+
+          <!-- Mood & Character Highlight Section -->
+          <div class="p-5 rounded-2xl bg-gradient-to-tr from-slate-50 to-indigo-50/60 border border-slate-200/90 mb-5 space-y-4">
+            
+            <!-- Mood & Palette Bar -->
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200/70 pb-3">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold text-slate-400">시각적 무드:</span>
+                <span id="card-mood-name" class="text-xs sm:text-sm font-bold text-indigo-900 px-2.5 py-0.5 rounded-full bg-indigo-100">따스한 햇살 웜톤 무드 ☀️</span>
+              </div>
+              <div class="flex items-center gap-1.5" id="card-mood-palette">
+                <!-- Color chips -->
+              </div>
+            </div>
+
+            <!-- Side-by-Side: Full Character Illustration + Info -->
+            <div class="flex flex-col sm:flex-row items-center gap-5">
+              
+              <!-- Character Full-Body Illustration View in Result Card -->
+              <div class="flex flex-col items-center shrink-0">
+                <div id="card-character-stage" class="w-44 h-64 bg-white rounded-2xl border border-slate-200 shadow-sm flex items-center justify-center p-2">
+                  <!-- Character SVG injected here -->
+                </div>
+                <span id="card-gender-badge" class="mt-2 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-white text-slate-700 border border-slate-200 shadow-2xs flex items-center gap-1">
+                  <span>👧</span> 여학생 모델
+                </span>
+              </div>
+
+              <!-- Info & Vibe Details -->
+              <div class="text-center sm:text-left space-y-2 grow">
+                <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                  <span id="card-chugumi-name" class="text-lg sm:text-xl font-black text-slate-900">해피 바이러스</span>
+                  <span id="card-chugumi-badge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-indigo-600 text-white">#상큼발랄</span>
+                </div>
+                <p id="card-chugumi-desc" class="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+                  주변을 환하게 밝히는 긍정 에너지와 밝은 미소의 매력
+                </p>
+                <div id="card-chugumi-keywords" class="flex flex-wrap items-center justify-center sm:justify-start gap-1 pt-0.5">
+                  <!-- keyword pills -->
+                </div>
+
+                <!-- Mini Outfit Item Badges -->
+                <div class="pt-2 border-t border-slate-100 space-y-1 text-xs text-slate-700">
+                  <div class="flex items-center gap-1.5">
+                    <span class="font-bold text-indigo-600 shrink-0">상의:</span>
+                    <span id="card-top-summary" class="truncate font-medium">오버핏 화이트 셔츠</span>
+                  </div>
+                  <div class="flex items-center gap-1.5">
+                    <span class="font-bold text-indigo-600 shrink-0">하의:</span>
+                    <span id="card-bottom-summary" class="truncate font-medium">세미와이드 슬랙스</span>
+                  </div>
+                  <div class="flex items-center gap-1.5">
+                    <span class="font-bold text-indigo-600 shrink-0">신발:</span>
+                    <span id="card-shoes-summary" class="truncate font-medium">베이직 올화이트 스니커즈</span>
+                  </div>
+                  <div class="flex items-center gap-1.5">
+                    <span class="font-bold text-indigo-600 shrink-0">소품:</span>
+                    <span id="card-acc-summary" class="truncate font-medium">대용량 백팩, 인형 키링</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Student Motto Quote -->
+          <div class="p-4 rounded-xl bg-indigo-50/70 border border-indigo-100 text-center mb-5">
+            <div class="text-[11px] font-bold text-indigo-500 mb-1 uppercase tracking-wider">나의 다짐 한 줄 (Motto)</div>
+            <p id="card-student-motto" class="text-sm sm:text-base font-bold text-indigo-950 italic">
+              "단정함 속에 나의 진지한 열정을 담아 꿈을 이룰래요!"
+            </p>
+          </div>
+
+          <!-- Teacher Encouragement Note -->
+          <div class="p-4 rounded-xl bg-emerald-50/70 border border-emerald-200/90 text-left">
+            <div class="flex items-center justify-between mb-1.5">
+              <div class="flex items-center gap-1.5 text-xs font-bold text-emerald-800">
+                <span>👩‍🏫</span>
+                <span>가정 선생님의 따뜻한 응원 피드백</span>
+              </div>
+              <button type="button" id="btn-refresh-feedback" class="text-[11px] font-bold text-emerald-800 bg-white border border-emerald-300 px-2.5 py-0.5 rounded-lg hover:bg-emerald-100 hover:text-emerald-900 transition-all flex items-center gap-1 shadow-2xs">
+                <span>🔄</span>
+                <span>다른 응원 보기</span>
+              </button>
+            </div>
+            <p id="card-teacher-feedback" class="text-xs sm:text-sm text-emerald-950 leading-relaxed font-medium">
+              선생님 응원 피드백 문구가 여기에 표시됩니다.
+            </p>
+          </div>
+
+          <!-- Card Footer Stamp -->
+          <div class="mt-5 pt-3.5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+            <span>중1 청소년기 자아정체성 및 개성 표현 수업</span>
+            <span class="font-semibold text-indigo-600">VERIFIED LOOKBOOK ★★★★★</span>
+          </div>
+        </div>
+
+        <!-- Toolbar Action Buttons (Hidden when printing) -->
+        <div class="max-w-2xl mx-auto flex flex-wrap items-center justify-center gap-3 no-print">
+          <button id="btn-download-card" class="px-5 py-3 rounded-xl font-bold text-sm bg-indigo-600 text-white shadow-md hover:bg-indigo-700 active:scale-95 transition-all flex items-center gap-2">
+            <span>📸</span>
+            <span>이미지(PNG)로 카드 저장</span>
+          </button>
+          <button id="btn-copy-text" class="px-5 py-3 rounded-xl font-bold text-sm bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 active:scale-95 transition-all shadow-xs flex items-center gap-2">
+            <span>📋</span>
+            <span>과제 제출용 텍스트 복사</span>
+          </button>
+          <button id="btn-print" class="px-5 py-3 rounded-xl font-bold text-sm bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 active:scale-95 transition-all shadow-xs flex items-center gap-2">
+            <span>🖨️</span>
+            <span>인쇄 / PDF 저장</span>
+          </button>
+          <button id="btn-restart" class="px-5 py-3 rounded-xl font-bold text-sm bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 active:scale-95 transition-all shadow-xs flex items-center gap-2">
+            <span>🔄</span>
+            <span>처음부터 다시 만들기</span>
+          </button>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- Footer Guide -->
+    <footer class="bg-white border-t border-slate-200 py-6 mt-12 no-print text-center text-xs text-slate-500">
+      <div class="max-w-5xl mx-auto px-4 space-y-1">
+        <p class="font-semibold text-slate-700">중학교 1학년 가정(의복과 패션 생활) 자아정체성 및 스타일링 학습용 인터랙티브 웹앱</p>
+        <p>외부 서버 없이 브라우저에서 안전하고 깨끗하게 동작합니다. GitHub Pages 완벽 호환.</p>
+      </div>
+    </footer>
+
+    <!-- Toast Notification Popup -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-xl bg-slate-900/90 text-white text-xs font-semibold shadow-xl opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2">
+      <span id="toast-icon">✨</span>
+      <span id="toast-message">알림</span>
+    </div>
+
+    <!-- Vanilla JavaScript File -->
+    <script src="./script.js"></script>
+  </body>
+</html>
